@@ -58,7 +58,7 @@ def get_recency_weight(mtime: float | None, now: float | None = None) -> float:
 QUERY_RELATION_KEYWORDS = {
     # Chinese
     "治療": "treats", "處理": "treats", "處置": "treats",
-    "原因": "causes", "���成": "causes", "導致": "causes",
+    "原因": "causes", "造成": "causes", "導致": "causes",
     "診斷": "diagnoses", "檢查": "diagnoses", "評估": "diagnoses",
     "併發症": "complication_of", "合併症": "complication_of",
     "症狀": "symptom_of", "表現": "symptom_of",

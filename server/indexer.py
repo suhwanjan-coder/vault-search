@@ -54,6 +54,7 @@ SCHEMA = pa.schema([
 
 def parse_frontmatter(content: str) -> tuple[dict, str]:
     """Extract YAML frontmatter and return (metadata_dict, body)."""
+    content = content.lstrip("\ufeff")  # UTF-8 BOM (Windows editors) hides the opening ---
     if not content.startswith("---"):
         return {}, content
     end = content.find("\n---", 3)
@@ -166,7 +167,11 @@ def embed_texts(texts: list[str], client: ollama.Client) -> list[list[float]]:
 def load_hash_cache() -> dict:
     """Load file hash cache for incremental indexing."""
     if HASH_CACHE_PATH.exists():
-        return json.loads(HASH_CACHE_PATH.read_text(encoding="utf-8"))
+        try:
+            data = json.loads(HASH_CACHE_PATH.read_text(encoding="utf-8"))
+        except (ValueError, OSError):  # corrupt/non-UTF-8/unreadable: reindex everything
+            return {}
+        return data if isinstance(data, dict) else {}
     return {}
 
 
